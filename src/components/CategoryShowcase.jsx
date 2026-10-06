@@ -54,6 +54,25 @@ function useReveal(enabled) {
   return [ref, shown];
 }
 
+/* Phones/tablets: a card that fades and rises into place */
+function RevealUp({ delay = 0, children }) {
+  const [ref, shown] = useReveal(true);
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        opacity: shown ? 1 : 0,
+        transform: shown ? "translate3d(0, 0, 0)" : "translate3d(0, 40px, 0)",
+        transition: `transform 700ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, opacity 700ms ease-out ${delay}ms`,
+        willChange: "transform, opacity",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function CategoryShowcase() {
   /* True on phones and tablets (below 1024px): lighter animations */
   const [isCompact, setIsCompact] = useState(
@@ -116,7 +135,7 @@ export default function CategoryShowcase() {
                   opacity: quoteShown ? 1 : 0,
                   transform: quoteShown
                     ? "translate3d(0, 0, 0)"
-                    : "translate3d(-40px, 0, 0)",
+                    : "translate3d(40px, 0, 0)",
                   transition:
                     "transform 700ms cubic-bezier(0.22, 1, 0.36, 1) 120ms, opacity 700ms ease-out 120ms",
                   willChange: "transform, opacity",
@@ -183,83 +202,87 @@ export default function CategoryShowcase() {
               )?.cover ||
               "";
 
+            const card = (
+              <Link
+                to={`/${category.slug}`}
+                className="group relative block aspect-[4/5] overflow-hidden bg-sand"
+              >
+                {/* Image */}
+                {image ? (
+                  <img
+                    src={isCompact ? thumb(image) : image}
+                    onError={(event) => {
+                      /* If a thumbnail is missing, fall back to the original */
+                      if (event.currentTarget.src.includes("/images-thumb/")) {
+                        event.currentTarget.src = image;
+                      }
+                    }}
+                    alt={category.name}
+                    loading={index < 3 ? "eager" : "lazy"}
+                    decoding="async"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.045]"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center bg-sand">
+                    <div className="text-center">
+                      <p className="font-serif text-4xl italic text-espresso/25">
+                        Coming soon
+                      </p>
+
+                      <p className="mt-3 text-[9px] uppercase tracking-[0.25em] text-espresso/25">
+                        Future collection
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent transition-opacity duration-500 group-hover:from-black/80" />
+
+                {/* Bottom Content */}
+                <div className="absolute inset-x-0 bottom-0 p-3 sm:p-7">
+                  <h3 className="font-serif text-2xl font-medium leading-none text-white min-[480px]:text-4xl sm:text-5xl">
+                    {category.name}
+                  </h3>
+
+                  {/* Explore */}
+                  <div className="mt-3 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.2em] text-white sm:mt-6">
+                    <span>Explore</span>
+
+                    <span className="transition-transform duration-300 group-hover:translate-x-1">
+                      →
+                    </span>
+                  </div>
+                </div>
+
+                {/* Inner Rectangle */}
+                <div className="absolute inset-4 border border-white/0 transition-all duration-500 group-hover:inset-3 group-hover:border-white/30" />
+              </Link>
+            );
+
+            /* Phones and tablets: smooth CSS rise-up */
+            if (isCompact) {
+              return (
+                <RevealUp key={category.slug} delay={(index % 2) * 90}>
+                  {card}
+                </RevealUp>
+              );
+            }
+
+            /* Desktop: original animation, unchanged */
             return (
               <motion.div
                 key={category.slug}
-                initial={{ opacity: 0, y: isCompact ? 12 : 20 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={
-                  isCompact
-                    ? {
-                        once: true,
-                        amount: 0.02,
-                        margin: "0px 0px 120px 0px",
-                      }
-                    : { once: false, amount: 0.02 }
-                }
+                viewport={{ once: false, amount: 0.02 }}
                 transition={{
                   duration: 0.28,
-                  delay: isCompact ? (index % 2) * 0.04 : index * 0.02,
+                  delay: index * 0.02,
                   ease: "easeOut",
                 }}
               >
-                <Link
-                  to={`/${category.slug}`}
-                  className="group relative block aspect-[4/5] overflow-hidden bg-sand"
-                >
-                  {/* Image */}
-                  {image ? (
-                    <img
-                      src={isCompact ? thumb(image) : image}
-                      onError={(event) => {
-                        /* If a thumbnail is missing, fall back to the original */
-                        if (
-                          event.currentTarget.src.includes("/images-thumb/")
-                        ) {
-                          event.currentTarget.src = image;
-                        }
-                      }}
-                      alt={category.name}
-                      loading={index < 3 ? "eager" : "lazy"}
-                      decoding="async"
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.045]"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center bg-sand">
-                      <div className="text-center">
-                        <p className="font-serif text-4xl italic text-espresso/25">
-                          Coming soon
-                        </p>
-
-                        <p className="mt-3 text-[9px] uppercase tracking-[0.25em] text-espresso/25">
-                          Future collection
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent transition-opacity duration-500 group-hover:from-black/80" />
-
-                  {/* Bottom Content */}
-                  <div className="absolute inset-x-0 bottom-0 p-3 sm:p-7">
-                    <h3 className="font-serif text-2xl font-medium leading-none text-white min-[480px]:text-4xl sm:text-5xl">
-                      {category.name}
-                    </h3>
-
-                    {/* Explore */}
-                    <div className="mt-3 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.2em] text-white sm:mt-6">
-                      <span>Explore</span>
-
-                      <span className="transition-transform duration-300 group-hover:translate-x-1">
-                        →
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Inner Rectangle */}
-                  <div className="absolute inset-4 border border-white/0 transition-all duration-500 group-hover:inset-3 group-hover:border-white/30" />
-                </Link>
+                {card}
               </motion.div>
             );
           })}
