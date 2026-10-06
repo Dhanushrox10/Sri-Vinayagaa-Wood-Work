@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { categories } from "../data/content";
 import { recentWorksUrl } from "../data/links";
+import { thumb } from "../utils/thumb";
 
 export default function CategoryShowcase() {
   /* True on phones and tablets (below 1024px): lighter animations */
@@ -43,7 +44,8 @@ export default function CategoryShowcase() {
           )?.cover ||
           "",
       )
-      .filter(Boolean);
+      .filter(Boolean)
+      .map((url) => thumb(url));
 
     const preloadAll = async () => {
       for (const url of urls) {
@@ -215,7 +217,15 @@ export default function CategoryShowcase() {
                   {/* Image */}
                   {image ? (
                     <img
-                      src={image}
+                      src={isCompact ? thumb(image) : image}
+                      onError={(event) => {
+                        /* If a thumbnail is missing, fall back to the original */
+                        if (
+                          event.currentTarget.src.includes("/images-thumb/")
+                        ) {
+                          event.currentTarget.src = image;
+                        }
+                      }}
                       alt={category.name}
                       loading={isCompact || index < 3 ? "eager" : "lazy"}
                       decoding="async"
