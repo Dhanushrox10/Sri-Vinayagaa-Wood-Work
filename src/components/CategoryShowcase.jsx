@@ -68,7 +68,7 @@ function RevealUp({ delay = 0, children }) {
       style={{
         opacity: shown ? 1 : 0,
         transform: shown ? "translate3d(0, 0, 0)" : "translate3d(0, 40px, 0)",
-        transition: `transform 700ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, opacity 700ms ease-out ${delay}ms`,
+        transition: `transform 800ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, opacity 800ms ease-out ${delay}ms`,
         willChange: "transform, opacity",
       }}
     >
@@ -121,7 +121,7 @@ export default function CategoryShowcase() {
                     ? "translate3d(0, 0, 0)"
                     : "translate3d(-40px, 0, 0)",
                   transition:
-                    "transform 700ms cubic-bezier(0.22, 1, 0.36, 1), opacity 700ms ease-out",
+                    "transform 800ms cubic-bezier(0.22, 1, 0.36, 1), opacity 800ms ease-out",
                   willChange: "transform, opacity",
                 }}
               >
@@ -141,7 +141,7 @@ export default function CategoryShowcase() {
                     ? "translate3d(0, 0, 0)"
                     : "translate3d(40px, 0, 0)",
                   transition:
-                    "transform 700ms cubic-bezier(0.22, 1, 0.36, 1) 60ms, opacity 700ms ease-out 60ms",
+                    "transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 60ms, opacity 800ms ease-out 60ms",
                   willChange: "transform, opacity",
                 }}
               >
@@ -250,7 +250,7 @@ export default function CategoryShowcase() {
                   </h3>
 
                   {/* Explore */}
-                  <div className="mt-3 flex items-center gap-3 text-[10px] font-medium uppercase leading-none tracking-[0.2em] text-white sm:mt-6">
+                  <div className="mt-3 flex items-center justify-start gap-2 text-[10px] font-medium uppercase leading-none tracking-[0.2em] text-white sm:mt-6">
                     <span className="leading-none">Explore</span>
 
                     <span className="inline-flex items-center leading-none transition-transform duration-300 group-hover:translate-x-1">

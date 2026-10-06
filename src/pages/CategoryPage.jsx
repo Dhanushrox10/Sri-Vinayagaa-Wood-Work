@@ -965,32 +965,28 @@ export default function CategoryPage() {
                             {option.name}
                           </h3>
 
-                          <div
-                            className="
+<div
+  className="
     mt-3
     flex
     items-center
-    gap-3
+    justify-start
+    gap-2
     text-[10px]
     font-medium
     uppercase
+    leading-none
     tracking-[0.2em]
     text-white
     sm:mt-6
   "
-                          >
-                            <span>View Collection</span>
+>
+  <span className="leading-none">View Collection</span>
 
-                            <span
-                              className="
-      transition-transform
-      duration-300
-      group-hover:translate-x-1
-    "
-                            >
-                              →
-                            </span>
-                          </div>
+  <span className="inline-flex items-center leading-none transition-transform duration-300 group-hover:translate-x-1">
+    <span className="-translate-y-px">→</span>
+  </span>
+</div>
                         </div>
 
                         <div
