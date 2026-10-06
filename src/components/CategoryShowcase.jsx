@@ -36,12 +36,15 @@ function useReveal(enabled) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry.intersectionRatio >= 0.2) {
+          /* Coming into view: play the animation */
           setShown(true);
-          observer.disconnect();
+        } else if (!entry.isIntersecting) {
+          /* Completely out of view: reset so it plays again next time */
+          setShown(false);
         }
       },
-      { threshold: 0.2, rootMargin: "0px 0px -60px 0px" },
+      { threshold: [0, 0.2], rootMargin: "0px 0px -60px 0px" },
     );
 
     observer.observe(node);
@@ -55,6 +58,7 @@ function useReveal(enabled) {
 }
 
 /* Phones/tablets: a card that fades and rises into place */
+/* Phones/tablets: a card that fades and rises into place */
 function RevealUp({ delay = 0, children }) {
   const [ref, shown] = useReveal(true);
 
@@ -64,7 +68,7 @@ function RevealUp({ delay = 0, children }) {
       style={{
         opacity: shown ? 1 : 0,
         transform: shown ? "translate3d(0, 0, 0)" : "translate3d(0, 40px, 0)",
-        transition: `transform 700ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, opacity 700ms ease-out ${delay}ms`,
+        transition: `transform 450ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, opacity 450ms ease-out ${delay}ms`,
         willChange: "transform, opacity",
       }}
     >
@@ -117,7 +121,7 @@ export default function CategoryShowcase() {
                     ? "translate3d(0, 0, 0)"
                     : "translate3d(-40px, 0, 0)",
                   transition:
-                    "transform 700ms cubic-bezier(0.22, 1, 0.36, 1), opacity 700ms ease-out",
+                    "transform 450ms cubic-bezier(0.22, 1, 0.36, 1), opacity 450ms ease-out",
                   willChange: "transform, opacity",
                 }}
               >
@@ -137,7 +141,7 @@ export default function CategoryShowcase() {
                     ? "translate3d(0, 0, 0)"
                     : "translate3d(40px, 0, 0)",
                   transition:
-                    "transform 700ms cubic-bezier(0.22, 1, 0.36, 1) 120ms, opacity 700ms ease-out 120ms",
+                    "transform 450ms cubic-bezier(0.22, 1, 0.36, 1) 60ms, opacity 450ms ease-out 60ms",
                   willChange: "transform, opacity",
                 }}
               >
@@ -263,7 +267,7 @@ export default function CategoryShowcase() {
             /* Phones and tablets: smooth CSS rise-up */
             if (isCompact) {
               return (
-                <RevealUp key={category.slug} delay={(index % 2) * 90}>
+                  <RevealUp key={category.slug} delay={(index % 2) * 60}>
                   {card}
                 </RevealUp>
               );
