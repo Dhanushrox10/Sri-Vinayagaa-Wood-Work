@@ -10,7 +10,11 @@ import { thumb } from "../utils/thumb";
  * on the graphics layer and stays smooth even when the page is busy.
  * Starts once, when the element is a little inside the screen.
  */
-function useReveal(enabled) {
+function useReveal(
+  enabled,
+  trigger = 0.2,
+  margin = "0px 0px -60px 0px",
+) {
   const ref = useRef(null);
   const [shown, setShown] = useState(false);
 
@@ -36,7 +40,7 @@ function useReveal(enabled) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.intersectionRatio >= 0.2) {
+        if (entry.intersectionRatio >= trigger) {
           /* Coming into view: play the animation */
           setShown(true);
         } else if (!entry.isIntersecting) {
@@ -44,7 +48,7 @@ function useReveal(enabled) {
           setShown(false);
         }
       },
-      { threshold: [0, 0.2], rootMargin: "0px 0px -60px 0px" },
+      { threshold: [0, trigger], rootMargin: margin },
     );
 
     observer.observe(node);
@@ -52,7 +56,7 @@ function useReveal(enabled) {
     return () => {
       observer.disconnect();
     };
-  }, [enabled]);
+  }, [enabled, trigger, margin]);
 
   return [ref, shown];
 }
@@ -60,7 +64,7 @@ function useReveal(enabled) {
 /* Phones/tablets: a card that fades and rises into place */
 /* Phones/tablets: a card that fades and rises into place */
 function RevealUp({ delay = 0, children }) {
-  const [ref, shown] = useReveal(true);
+  const [ref, shown] = useReveal(true, 0.05, "0px 0px 40px 0px");
 
   return (
     <div
