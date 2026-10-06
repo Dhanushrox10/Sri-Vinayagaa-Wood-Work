@@ -1,9 +1,58 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { categories } from "../data/content";
 import { recentWorksUrl } from "../data/links";
 import { thumb } from "../utils/thumb";
+
+/*
+ * Phones/tablets: fade + slide in using a plain CSS transition, which runs
+ * on the graphics layer and stays smooth even when the page is busy.
+ * Starts once, when the element is a little inside the screen.
+ */
+function useReveal(enabled) {
+  const ref = useRef(null);
+  const [shown, setShown] = useState(false);
+
+  useEffect(() => {
+    if (!enabled) {
+      return undefined;
+    }
+
+    const node = ref.current;
+
+    if (!node) {
+      return undefined;
+    }
+
+    if (!("IntersectionObserver" in window)) {
+      /* Very old browsers: just show it on the next frame */
+      const frame = requestAnimationFrame(() => setShown(true));
+
+      return () => {
+        cancelAnimationFrame(frame);
+      };
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShown(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2, rootMargin: "0px 0px -60px 0px" },
+    );
+
+    observer.observe(node);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [enabled]);
+
+  return [ref, shown];
+}
 
 export default function CategoryShowcase() {
   /* True on phones and tablets (below 1024px): lighter animations */
@@ -25,123 +74,8 @@ export default function CategoryShowcase() {
     };
   }, []);
 
-  /* Phones/tablets: quietly load and decode the six cover photos one by one
-     after the page has settled, so they are ready before you scroll to them */
-  useEffect(() => {
-    if (!isCompact) {
-      return undefined;
-    }
-
-    let cancelled = false;
-    let handle;
-
-    const urls = categories
-      .map(
-        (category) =>
-          category.cover ||
-          category.options?.find(
-            (option) => option.cover || option.photos?.length > 0,
-          )?.cover ||
-          "",
-      )
-      .filter(Boolean)
-      .map((url) => thumb(url));
-
-    const preloadAll = async () => {
-      for (const url of urls) {
-        if (cancelled) {
-          return;
-        }
-
-        const image = new Image();
-        image.src = url;
-
-        try {
-          await image.decode();
-        } catch {
-          /* ignore: the normal <img> will still load it */
-        }
-
-        /* small pause so scrolling never has to wait for us */
-        await new Promise((resolve) => setTimeout(resolve, 200));
-      }
-    };
-
-    const hasIdle = "requestIdleCallback" in window;
-
-    if (hasIdle) {
-      handle = window.requestIdleCallback(preloadAll, { timeout: 3000 });
-    } else {
-      handle = window.setTimeout(preloadAll, 2000);
-    }
-
-    return () => {
-      cancelled = true;
-
-      if (hasIdle) {
-        window.cancelIdleCallback(handle);
-      } else {
-        window.clearTimeout(handle);
-      }
-    };
-  }, [isCompact]);
-
-  /*
-   * HEADING ANIMATION
-   *
-   * Desktop: unchanged. The whole row slides in from the left and the quote
-   * (nested inside it) has its own slide, exactly as before.
-   *
-   * Phones/tablets: the row itself stays still. The title slides in from the
-   * left and the quote from the right, each on its own, using only
-   * transform + opacity, and both replay every time the section is entered.
-   */
-  const rowMotion = isCompact
-    ? {}
-    : {
-        initial: { opacity: 0, x: -50 },
-        whileInView: { opacity: 1, x: 0 },
-        viewport: { once: false, amount: 0.2 },
-        transition: {
-          duration: 0.35,
-          ease: "easeOut",
-        },
-      };
-
-  const titleMotion = isCompact
-    ? {
-        initial: { opacity: 0, x: -28 },
-        whileInView: { opacity: 1, x: 0 },
-        viewport: { once: false, amount: 0.2 },
-        transition: {
-          duration: 0.4,
-          ease: "easeOut",
-        },
-        style: { willChange: "transform, opacity" },
-      }
-    : {};
-
-  const quoteMotion = isCompact
-    ? {
-        initial: { opacity: 0, x: 28 },
-        whileInView: { opacity: 1, x: 0 },
-        viewport: { once: false, amount: 0.2 },
-        transition: {
-          duration: 0.4,
-          delay: 0.08,
-          ease: "easeOut",
-        },
-        style: { willChange: "transform, opacity" },
-      }
-    : {
-        initial: { opacity: 0, x: 50 },
-        whileInView: { opacity: 1, x: 0 },
-        viewport: { once: false, amount: 0.2 },
-        transition: {
-          duration: 0.35,
-          ease: "easeOut",
-        },
-      };
+  const [titleRef, titleShown] = useReveal(isCompact);
+  const [quoteRef, quoteShown] = useReveal(isCompact);
 
   return (
     <section
@@ -151,30 +85,89 @@ export default function CategoryShowcase() {
       <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
         {/* Heading */}
         <div className="mb-10 sm:mb-14">
-          <motion.div
-            {...rowMotion}
-            className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-8"
-          >
-            {/* LEFT — TITLE */}
-            <motion.div {...titleMotion} className="shrink-0">
-              <h2 className="font-serif text-5xl font-medium leading-[0.9] tracking-[-0.04em] text-espresso sm:text-6xl md:text-7xl lg:text-8xl">
-                Explore
-                <span className="block italic text-copper">Our Work.</span>
-              </h2>
-            </motion.div>
+          {isCompact ? (
+            /* Phones and tablets: smooth CSS slide-in */
+            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-8">
+              {/* LEFT — TITLE */}
+              <div
+                ref={titleRef}
+                className="shrink-0"
+                style={{
+                  opacity: titleShown ? 1 : 0,
+                  transform: titleShown
+                    ? "translate3d(0, 0, 0)"
+                    : "translate3d(-40px, 0, 0)",
+                  transition:
+                    "transform 700ms cubic-bezier(0.22, 1, 0.36, 1), opacity 700ms ease-out",
+                  willChange: "transform, opacity",
+                }}
+              >
+                <h2 className="font-serif text-5xl font-medium leading-[0.92] tracking-[-0.04em] text-espresso sm:text-6xl md:text-7xl lg:text-8xl">
+                  Explore
+                  <span className="block italic text-copper">Our Work.</span>
+                </h2>
+              </div>
 
-            {/* RIGHT — QUOTE */}
+              {/* RIGHT — QUOTE */}
+              <div
+                ref={quoteRef}
+                className="relative max-w-sm text-left md:right-[130px] md:max-w-md md:text-center lg:max-w-lg"
+                style={{
+                  opacity: quoteShown ? 1 : 0,
+                  transform: quoteShown
+                    ? "translate3d(0, 0, 0)"
+                    : "translate3d(-40px, 0, 0)",
+                  transition:
+                    "transform 700ms cubic-bezier(0.22, 1, 0.36, 1) 120ms, opacity 700ms ease-out 120ms",
+                  willChange: "transform, opacity",
+                }}
+              >
+                <p className="font-serif text-lg font-medium italic leading-8 tracking-[-0.01em] text-black sm:text-xl sm:leading-9 md:text-2xl md:leading-10">
+                  “A collection of spaces shaped by
+                  <br className="hidden sm:block" />
+                  thoughtful design and craftsmanship.”
+                </p>
+              </div>
+            </div>
+          ) : (
+            /* Desktop: original animation, unchanged */
             <motion.div
-              {...quoteMotion}
-              className="relative max-w-sm text-left md:right-[130px] md:max-w-md md:text-center lg:max-w-lg"
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: false, amount: 0.2 }}
+              transition={{
+                duration: 0.35,
+                ease: "easeOut",
+              }}
+              className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-8"
             >
-              <p className="font-serif text-lg font-medium italic leading-8 tracking-[-0.01em] text-black sm:text-xl sm:leading-9 md:text-2xl md:leading-10">
-                “A collection of spaces shaped by
-                <br className="hidden sm:block" />
-                thoughtful design and craftsmanship.”
-              </p>
+              {/* LEFT — TITLE */}
+              <div className="shrink-0">
+                <h2 className="font-serif text-5xl font-medium leading-[0.92] tracking-[-0.04em] text-espresso sm:text-6xl md:text-7xl lg:text-8xl">
+                  Explore
+                  <span className="block italic text-copper">Our Work.</span>
+                </h2>
+              </div>
+
+              {/* RIGHT — QUOTE */}
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{
+                  duration: 0.35,
+                  ease: "easeOut",
+                }}
+                className="relative max-w-sm text-left md:right-[130px] md:max-w-md md:text-center lg:max-w-lg"
+              >
+                <p className="font-serif text-lg font-medium italic leading-8 tracking-[-0.01em] text-black sm:text-xl sm:leading-9 md:text-2xl md:leading-10">
+                  “A collection of spaces shaped by
+                  <br className="hidden sm:block" />
+                  thoughtful design and craftsmanship.”
+                </p>
+              </motion.div>
             </motion.div>
-          </motion.div>
+          )}
         </div>
 
         {/* Category Cards */}
@@ -193,14 +186,14 @@ export default function CategoryShowcase() {
             return (
               <motion.div
                 key={category.slug}
-                initial={{ opacity: 0, y: isCompact ? 8 : 20 }}
+                initial={{ opacity: 0, y: isCompact ? 12 : 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={
                   isCompact
                     ? {
                         once: true,
-                        amount: 0,
-                        margin: "0px 0px 400px 0px",
+                        amount: 0.02,
+                        margin: "0px 0px 120px 0px",
                       }
                     : { once: false, amount: 0.02 }
                 }
@@ -227,7 +220,7 @@ export default function CategoryShowcase() {
                         }
                       }}
                       alt={category.name}
-                      loading={isCompact || index < 3 ? "eager" : "lazy"}
+                      loading={index < 3 ? "eager" : "lazy"}
                       decoding="async"
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.045]"
                     />
