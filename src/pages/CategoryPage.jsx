@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { getCategory } from "../data/content";
 import { recentWorksUrl } from "../data/links";
+import PhotoViewer from "../components/PhotoViewer";
 
 const categoryQuotes = {
   "living-room": "A space made for living, gathering and coming home to.",
@@ -585,7 +586,7 @@ export default function CategoryPage() {
                       <img
                         src={photo}
                         alt={`${category.name} ${index + 1}`}
-                        loading={isCompact || index < 3 ? "eager" : "lazy"}
+                        loading={index < (isCompact ? 6 : 3) ? "eager" : "lazy"}
                         decoding="async"
                         className="
                           aspect-[4/5]
@@ -927,7 +928,7 @@ export default function CategoryPage() {
                               uppercase
                               tracking-[0.18em]
                               text-white/75
-                              backdrop-blur-[2px]
+                              lg:backdrop-blur-[2px]
                               sm:px-3
                               sm:py-1.5
                             "
@@ -1055,218 +1056,21 @@ export default function CategoryPage() {
         )}
       </main>
 
-      <AnimatePresence>
+            <AnimatePresence>
         {isDirectGallery &&
           selectedPhoto !== null &&
           category.photos?.[selectedPhoto] && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="
-                fixed
-                inset-0
-                z-[100]
-                overscroll-none
-                touch-none
-                bg-[#17110d]/96
-              "
-              onClick={() => setSelectedPhoto(null)}
-            >
-              <button
-                type="button"
-                aria-label="Close gallery"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setSelectedPhoto(null);
-                }}
-                className="
-                  absolute
-                  right-5
-                  top-5
-                  z-30
-                  flex
-                  h-10
-                  w-10
-                  cursor-pointer
-                  items-center
-                  justify-center
-                  text-3xl
-                  font-light
-                  text-white/75
-                  transition-colors
-                  hover:text-white
-                  sm:right-8
-                  sm:top-8
-                "
-              >
-                ×
-              </button>
-
-              <button
-                type="button"
-                aria-label="Previous photo"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  showPreviousPhoto();
-                }}
-                className="
-                  group
-                  absolute
-                  left-4
-                  top-1/2
-                  z-30
-                  flex
-                  -translate-y-1/2
-                  cursor-pointer
-                  items-center
-                  justify-center
-                  text-4xl
-                  font-light
-                  text-white/65
-                  transition-colors
-                  hover:text-white
-                  sm:left-8
-                  sm:text-5xl
-                  md:left-12
-                "
-              >
-                <span
-                  className="
-                    transition-transform
-                    duration-300
-                    group-hover:-translate-x-1
-                  "
-                >
-                  ←
-                </span>
-              </button>
-
-              <button
-                type="button"
-                aria-label="Next photo"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  showNextPhoto();
-                }}
-                className="
-                  group
-                  absolute
-                  right-4
-                  top-1/2
-                  z-30
-                  flex
-                  -translate-y-1/2
-                  cursor-pointer
-                  items-center
-                  justify-center
-                  text-4xl
-                  font-light
-                  text-white/65
-                  transition-colors
-                  hover:text-white
-                  sm:right-8
-                  sm:text-5xl
-                  md:right-12
-                "
-              >
-                <span
-                  className="
-                    transition-transform
-                    duration-300
-                    group-hover:translate-x-1
-                  "
-                >
-                  →
-                </span>
-              </button>
-
-              <div
-                className="
-                  pointer-events-none
-                  absolute
-                  inset-0
-                  flex
-                  items-center
-                  justify-center
-                  px-16
-                  py-20
-                  sm:px-24
-                  md:px-32
-                "
-              >
-                <AnimatePresence mode="wait">
-                  <motion.img
-                    key={category.photos[selectedPhoto]}
-                    src={category.photos[selectedPhoto]}
-                    alt={`${category.name} ${selectedPhoto + 1}`}
-                    initial={{
-                      opacity: 0,
-                      scale: 0.995,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      scale: 1,
-                    }}
-                    exit={{
-                      opacity: 0,
-                      scale: 0.995,
-                    }}
-                    transition={{
-                      duration: 0.12,
-                      ease: "easeOut",
-                    }}
-                    onClick={(event) => event.stopPropagation()}
-                    className="
-                      pointer-events-auto
-                      max-h-[78vh]
-                      max-w-[82vw]
-                      object-contain
-                      sm:max-h-[80vh]
-                      sm:max-w-[78vw]
-                    "
-                  />
-                </AnimatePresence>
-              </div>
-
-              <div
-                className="
-                  pointer-events-none
-                  absolute
-                  bottom-6
-                  left-6
-                  z-30
-                  sm:bottom-8
-                  sm:left-8
-                  lg:left-12
-                "
-              >
-                <p
-                  className="
-                    font-serif
-                    text-2xl
-                    leading-none
-                    text-white
-                    sm:text-3xl
-                  "
-                >
-                  {category.name}
-                </p>
-
-                <p
-                  className="
-                    mt-2
-                    text-[9px]
-                    uppercase
-                    tracking-[0.25em]
-                    text-white/45
-                  "
-                >
-                  {String(selectedPhoto + 1).padStart(2, "0")} /{" "}
-                  {String(category.photos.length).padStart(2, "0")}
-                </p>
-              </div>
-            </motion.div>
+            <PhotoViewer
+              key="photo-viewer"
+              src={category.photos[selectedPhoto]}
+              alt={`${category.name} ${selectedPhoto + 1}`}
+              title={category.name}
+              index={selectedPhoto}
+              total={category.photos.length}
+              onClose={() => setSelectedPhoto(null)}
+              onPrev={showPreviousPhoto}
+              onNext={showNextPhoto}
+            />
           )}
       </AnimatePresence>
     </>

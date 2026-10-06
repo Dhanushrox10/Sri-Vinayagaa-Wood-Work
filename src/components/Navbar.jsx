@@ -75,14 +75,18 @@ export default function Navbar() {
     };
   }, []);
 
-  /* Which home-page section is in the middle of the screen
-     (paused while the burger menu is open) */
+   /* Which home-page section is in the middle of the screen
+     (paused while the burger menu is open, and only needed on the home page) */
   useEffect(() => {
-    if (mobileOpen) {
+    if (mobileOpen || pathname !== "/") {
       return undefined;
     }
 
-    const updateSection = () => {
+    let frame = 0;
+
+    const compute = () => {
+      frame = 0;
+
       const mid = window.innerHeight / 2;
       const about = document.getElementById("about");
       const contact = document.getElementById("contact");
@@ -98,12 +102,19 @@ export default function Navbar() {
       setActiveSection(next);
     };
 
-    updateSection();
+    const updateSection = () => {
+      if (!frame) {
+        frame = requestAnimationFrame(compute);
+      }
+    };
+
+    compute();
 
     window.addEventListener("scroll", updateSection, { passive: true });
     window.addEventListener("resize", updateSection);
 
     return () => {
+      cancelAnimationFrame(frame);
       window.removeEventListener("scroll", updateSection);
       window.removeEventListener("resize", updateSection);
     };

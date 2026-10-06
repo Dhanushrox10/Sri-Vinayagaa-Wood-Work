@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { site } from "../data/content";
 
@@ -8,6 +8,10 @@ export default function Hero() {
   const [current, setCurrent] = useState(0);
   const [loadedImages, setLoadedImages] = useState({});
   const [failedImages, setFailedImages] = useState({});
+  const [inView, setInView] = useState(true);
+
+  const sectionRef = useRef(null);
+  const requestedRef = useRef({});
 
   const photos = useMemo(
     () => [
@@ -70,10 +74,20 @@ export default function Hero() {
 
   /* -----------------------------------------
      PRELOAD IMAGES
+     Only the current slide and the next two,
+     instead of all of them at once.
   ----------------------------------------- */
 
   useEffect(() => {
-    slides.forEach((slide) => {
+    [0, 1, 2].forEach((step) => {
+      const slide = slides[(current + step) % slides.length];
+
+      if (!slide || requestedRef.current[slide.src]) {
+        return;
+      }
+
+      requestedRef.current[slide.src] = true;
+
       const image = new Image();
 
       image.src = slide.src;
@@ -92,15 +106,37 @@ export default function Hero() {
         }));
       };
     });
-  }, [slides]);
+  }, [current, slides]);
+
+  /* -----------------------------------------
+     PAUSE WHEN THE HERO IS OFF SCREEN
+  ----------------------------------------- */
+
+  useEffect(() => {
+    const node = sectionRef.current;
+
+    if (!node || !("IntersectionObserver" in window)) {
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setInView(entry.isIntersecting);
+    });
+
+    observer.observe(node);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   /* -----------------------------------------
      AUTOMATIC SLIDESHOW
   ----------------------------------------- */
 
   useEffect(() => {
-    if (slides.length <= 1) {
-      return;
+    if (slides.length <= 1 || !inView) {
+      return undefined;
     }
 
     const interval = setInterval(() => {
@@ -110,7 +146,7 @@ export default function Hero() {
     return () => {
       clearInterval(interval);
     };
-  }, [slides.length]);
+  }, [slides.length, inView]);
 
   const activeSlide = slides[current] || slides[0];
 
@@ -123,7 +159,10 @@ export default function Hero() {
   )}`;
 
   return (
-    <section className="relative flex min-h-svh items-start overflow-hidden bg-espresso text-white lg:items-center">
+    <section
+      ref={sectionRef}
+      className="relative flex min-h-dvh items-start overflow-hidden bg-espresso text-white lg:items-center"
+    >
       {/* =====================================
           BACKGROUND
       ===================================== */}
@@ -196,7 +235,7 @@ export default function Hero() {
             className="
               max-w-4xl
               font-serif
-              text-[clamp(2.9rem,12.8vw,3.6rem)]
+              text-[clamp(3.1rem,13.8vw,3.9rem)]
               leading-[1.02]
               tracking-tight
               sm:text-[4.75rem]
@@ -279,9 +318,18 @@ export default function Hero() {
               "
             >
               View Our Work
-              <span className="transition-transform duration-300 group-hover:translate-x-1">
-                →
-              </span>
+              <svg
+                className="h-2.5 w-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1"
+                viewBox="0 0 20 12"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M1 6h17M13 1.5 18 6l-5 4.5" />
+              </svg>
             </a>
 
             <a
@@ -302,12 +350,12 @@ export default function Hero() {
                 uppercase
                 tracking-[0.2em]
                 text-white
-                backdrop-blur-sm
                 transition-all
                 duration-300
                 hover:border-white
                 hover:bg-white
                 hover:!text-[#8B2E2E]
+                lg:backdrop-blur-sm
               "
             >
               Enquire Now
@@ -385,18 +433,18 @@ export default function Hero() {
 
       <div className="absolute bottom-0 left-0 right-0 z-10 h-px bg-white/10">
         <motion.div
-          key={current}
+          key={`${current}-${inView}`}
           initial={{
-            width: "0%",
+            scaleX: 0,
           }}
           animate={{
-            width: "100%",
+            scaleX: 1,
           }}
           transition={{
             duration: slideDuration / 1000,
             ease: "linear",
           }}
-          className="h-full bg-copper"
+          className="h-full w-full origin-left bg-copper"
         />
       </div>
 

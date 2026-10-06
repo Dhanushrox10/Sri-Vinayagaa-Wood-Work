@@ -1,23 +1,47 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { categories } from "../data/content";
 import { recentWorksUrl } from "../data/links";
 
 export default function CategoryShowcase() {
+  /* True on phones and tablets (below 1024px): lighter animations */
+  const [isCompact, setIsCompact] = useState(
+    () => window.matchMedia("(max-width: 1023px)").matches,
+  );
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 1023px)");
+
+    const handleChange = (event) => {
+      setIsCompact(event.matches);
+    };
+
+    query.addEventListener("change", handleChange);
+
+    return () => {
+      query.removeEventListener("change", handleChange);
+    };
+  }, []);
+
   return (
     <section
       id="work"
-      className="bg-ivory py-8 max-lg:overflow-x-clip sm:py-10 md:py-12"
+      className="bg-ivory py-8 max-lg:overflow-x-clip max-sm:scroll-mt-[65px] sm:max-lg:scroll-mt-[73px] sm:py-10 md:py-12"
     >
       <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
         {/* Heading */}
         <div className="mb-10 sm:mb-14">
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            initial={{
+              opacity: 0,
+              x: isCompact ? 0 : -50,
+              y: isCompact ? 14 : 0,
+            }}
+            whileInView={{ opacity: 1, x: 0, y: 0 }}
+            viewport={{ once: isCompact, amount: 0.2 }}
             transition={{
-              duration: 0.35,
+              duration: isCompact ? 0.4 : 0.35,
               ease: "easeOut",
             }}
             className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-8"
@@ -32,9 +56,9 @@ export default function CategoryShowcase() {
 
             {/* RIGHT — QUOTE */}
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
+              initial={isCompact ? false : { opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false, amount: 0.2 }}
+              viewport={{ once: isCompact, amount: 0.2 }}
               transition={{
                 duration: 0.35,
                 ease: "easeOut",
@@ -66,12 +90,20 @@ export default function CategoryShowcase() {
             return (
               <motion.div
                 key={category.slug}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: isCompact ? 12 : 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.02 }}
+                viewport={
+                  isCompact
+                    ? {
+                        once: true,
+                        amount: 0.02,
+                        margin: "0px 0px 120px 0px",
+                      }
+                    : { once: false, amount: 0.02 }
+                }
                 transition={{
                   duration: 0.28,
-                  delay: index * 0.02,
+                  delay: isCompact ? (index % 2) * 0.04 : index * 0.02,
                   ease: "easeOut",
                 }}
               >
