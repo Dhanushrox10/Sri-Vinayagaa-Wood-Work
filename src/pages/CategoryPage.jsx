@@ -967,26 +967,26 @@ export default function CategoryPage() {
 
                           <div
                             className="
-                              mt-3
-                              flex
-                              items-center
-                              gap-3
-                              text-[10px]
-                              font-medium
-                              uppercase
-                              tracking-[0.2em]
-                              text-white
-                              sm:mt-6
-                            "
+    mt-3
+    flex
+    items-center
+    gap-3
+    text-[10px]
+    font-medium
+    uppercase
+    tracking-[0.2em]
+    text-white
+    sm:mt-6
+  "
                           >
                             <span>View Collection</span>
 
                             <span
                               className="
-                                transition-transform
-                                duration-300
-                                group-hover:translate-x-1
-                              "
+      transition-transform
+      duration-300
+      group-hover:translate-x-1
+    "
                             >
                               →
                             </span>
@@ -1056,7 +1056,7 @@ export default function CategoryPage() {
         )}
       </main>
 
-            <AnimatePresence>
+      <AnimatePresence>
         {isDirectGallery &&
           selectedPhoto !== null &&
           category.photos?.[selectedPhoto] && (

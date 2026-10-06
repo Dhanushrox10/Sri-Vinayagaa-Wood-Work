@@ -390,8 +390,8 @@ export default function OptionPage() {
             )}
 
             {/* BOTTOM NAVIGATION */}
-<div
-  className="
+            <div
+              className="
     mt-10
     flex
     items-center
@@ -402,11 +402,11 @@ export default function OptionPage() {
     sm:mt-12
     sm:pt-6
   "
->
-  <div>
-    <Link
-      to={`/${category.slug}`}
-      className="
+            >
+              <div>
+                <Link
+                  to={`/${category.slug}`}
+                  className="
         group
         inline-flex
         cursor-pointer
@@ -417,20 +417,20 @@ export default function OptionPage() {
         sm:text-[28px]
         lg:mt-1.5
       "
-    >
-      <span
-        className="
+                >
+                  <span
+                    className="
           transition-transform
           duration-300
           group-hover:-translate-x-1
         "
-      >
-        ←
-      </span>
+                  >
+                    ←
+                  </span>
 
-      <span className="ml-2">{category.name}</span>
-    </Link>
-  </div>
+                  <span className="ml-2">{category.name}</span>
+                </Link>
+              </div>
 
               <div className="flex items-center gap-3 lg:flex-col lg:items-start">
                 {/* RECENT WORKS (desktop only, mobile uses the burger menu) */}
@@ -498,7 +498,7 @@ export default function OptionPage() {
       </main>
 
       {/* GALLERY IMAGE VIEWER */}
-            <AnimatePresence>
+      <AnimatePresence>
         {selectedPhoto !== null && option.photos?.[selectedPhoto] && (
           <PhotoViewer
             key="photo-viewer"

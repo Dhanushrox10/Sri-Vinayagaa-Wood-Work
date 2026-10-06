@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import Footer from "../components/Footer";
 import Hero from "../components/Hero";
@@ -26,6 +26,20 @@ const reasons = [
 
 export default function Home() {
   const mapsUrl = "https://maps.app.goo.gl/WZYRXHKkiQq5tVTj7";
+
+  /* True on phones and tablets (below 1024px): quicker reveals */
+  const [isCompact, setIsCompact] = useState(
+    () => window.matchMedia("(max-width: 1023px)").matches,
+  );
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 1023px)");
+    const handleChange = (event) => setIsCompact(event.matches);
+
+    query.addEventListener("change", handleChange);
+
+    return () => query.removeEventListener("change", handleChange);
+  }, []);
 
   useEffect(() => {
     if (window.location.hash) {
@@ -84,15 +98,16 @@ export default function Home() {
             {reasons.map((reason, index) => (
               <motion.div
                 key={reason.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: isCompact ? 12 : 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{
-                  once: false,
-                  amount: 0.2,
-                }}
+                viewport={
+                  isCompact
+                    ? { once: true, amount: 0.02, margin: "0px 0px 120px 0px" }
+                    : { once: false, amount: 0.2 }
+                }
                 transition={{
-                  duration: 0.6,
-                  delay: index * 0.08,
+                  duration: isCompact ? 0.3 : 0.6,
+                  delay: isCompact ? (index % 2) * 0.04 : index * 0.08,
                 }}
                 className="
                   group
@@ -327,7 +342,7 @@ export default function Home() {
                     aria-hidden="true"
                   >
                     <path
-                      d="M6.6 2.5 9.2 2c.7-.1 1.3.3 1.5.9l1.2 3.4c.2.5 0 1.1-.4 1.4L9.8 9.2c1.1 2.2 2.9 4 5 5.1l1.5-1.7c.4-.4.9-.6.9-.6l3.4 1.2c.6.2 1 .8.9 1.5l-.5 2.6c-.1.7-.7 1.2-1.4 1.2C10.7 18.7 5.3 13.3 5.3 5.9c0-.7.5-1.3 1.3-1.4Z"
+                      d="M6.6 2.5 9.2 2c.7-.1 1.3.3 1.5.9l1.2 3.4c.2.5 0 1.1-.4 1.4L9.8 9.2c1.1 2.2 2.9 4 5 5.1l1.5-1.7c.4-.4.9-.6 1.4-.4l3.4 1.2c.6.2 1 .8.9 1.5l-.5 2.6c-.1.7-.7 1.2-1.4 1.2C10.7 18.7 5.3 13.3 5.3 5.9c0-.7.5-1.3 1.3-1.4Z"
                       fill="currentColor"
                     />
                   </svg>
