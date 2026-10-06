@@ -10,11 +10,7 @@ import { thumb } from "../utils/thumb";
  * on the graphics layer and stays smooth even when the page is busy.
  * Starts once, when the element is a little inside the screen.
  */
-function useReveal(
-  enabled,
-  trigger = 0.2,
-  margin = "0px 0px -60px 0px",
-) {
+function useReveal(enabled, trigger = 0.2, margin = "0px 0px -60px 0px") {
   const ref = useRef(null);
   const [shown, setShown] = useState(false);
 
@@ -72,7 +68,7 @@ function RevealUp({ delay = 0, children }) {
       style={{
         opacity: shown ? 1 : 0,
         transform: shown ? "translate3d(0, 0, 0)" : "translate3d(0, 40px, 0)",
-        transition: `transform 450ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, opacity 450ms ease-out ${delay}ms`,
+        transition: `transform 700ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, opacity 450ms ease-out ${delay}ms`,
         willChange: "transform, opacity",
       }}
     >
@@ -254,7 +250,7 @@ export default function CategoryShowcase() {
                   </h3>
 
                   {/* Explore */}
-                  <div className="mt-3 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.2em] text-white sm:mt-6">
+                  <div className="mt-3 flex items-center justify-center gap-3 text-[10px] font-medium uppercase tracking-[0.2em] text-white sm:mt-6 lg:justify-start lg:translate-x-[-6px]">
                     <span>Explore</span>
 
                     <span className="transition-transform duration-300 group-hover:translate-x-1">
@@ -271,7 +267,7 @@ export default function CategoryShowcase() {
             /* Phones and tablets: smooth CSS rise-up */
             if (isCompact) {
               return (
-                  <RevealUp key={category.slug} delay={(index % 2) * 60}>
+                <RevealUp key={category.slug} delay={(index % 2) * 60}>
                   {card}
                 </RevealUp>
               );
