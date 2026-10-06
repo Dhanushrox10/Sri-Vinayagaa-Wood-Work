@@ -637,7 +637,7 @@ export default function CategoryPage() {
                     justify-between
                     border-t
                     border-espresso/10
-                    pt-5
+                    pt-3
                     sm:mt-12
                     sm:pt-6
                   "
@@ -647,7 +647,6 @@ export default function CategoryPage() {
                       to="/#collections"
                       className="
                         group
-                        mt-1.5
                         inline-flex
                         cursor-pointer
                         items-center
@@ -655,6 +654,7 @@ export default function CategoryPage() {
                         text-[22px]
                         text-espresso
                         sm:text-[28px]
+                        lg:mt-1.5
                       "
                     >
                       <span

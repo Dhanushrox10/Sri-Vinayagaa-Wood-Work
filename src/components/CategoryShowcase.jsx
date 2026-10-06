@@ -24,6 +24,111 @@ export default function CategoryShowcase() {
     };
   }, []);
 
+  /*
+   * Phones/tablets only: quietly load and decode the card photos while the
+   * browser is idle, so nothing has to be decoded at the moment this section
+   * scrolls into view (that was the stutter on the first visit).
+   */
+  useEffect(() => {
+    if (!isCompact) {
+      return undefined;
+    }
+
+    const preload = () => {
+      categories.forEach((category) => {
+        const src =
+          category.cover ||
+          category.options?.find(
+            (option) => option.cover || option.photos?.length > 0,
+          )?.cover ||
+          "";
+
+        if (!src) {
+          return;
+        }
+
+        const photo = new Image();
+
+        photo.src = src;
+
+        if (photo.decode) {
+          photo.decode().catch(() => {});
+        }
+      });
+    };
+
+    if ("requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(preload, { timeout: 3000 });
+
+      return () => {
+        window.cancelIdleCallback(id);
+      };
+    }
+
+    const timer = window.setTimeout(preload, 1500);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [isCompact]);
+
+  /*
+   * HEADING ANIMATION
+   *
+   * Desktop: unchanged. The whole row slides in from the left and the quote
+   * (nested inside it) has its own slide, exactly as before.
+   *
+   * Phones/tablets: the row itself stays still. The title slides in from the
+   * left and the quote from the right, each on its own, using only
+   * transform + opacity, and both replay every time the section is entered.
+   */
+  const rowMotion = isCompact
+    ? {}
+    : {
+        initial: { opacity: 0, x: -50 },
+        whileInView: { opacity: 1, x: 0 },
+        viewport: { once: false, amount: 0.2 },
+        transition: {
+          duration: 0.35,
+          ease: "easeOut",
+        },
+      };
+
+  const titleMotion = isCompact
+    ? {
+        initial: { opacity: 0, x: -28 },
+        whileInView: { opacity: 1, x: 0 },
+        viewport: { once: false, amount: 0.2 },
+        transition: {
+          duration: 0.4,
+          ease: "easeOut",
+        },
+        style: { willChange: "transform, opacity" },
+      }
+    : {};
+
+  const quoteMotion = isCompact
+    ? {
+        initial: { opacity: 0, x: 28 },
+        whileInView: { opacity: 1, x: 0 },
+        viewport: { once: false, amount: 0.2 },
+        transition: {
+          duration: 0.4,
+          delay: 0.08,
+          ease: "easeOut",
+        },
+        style: { willChange: "transform, opacity" },
+      }
+    : {
+        initial: { opacity: 0, x: 50 },
+        whileInView: { opacity: 1, x: 0 },
+        viewport: { once: false, amount: 0.2 },
+        transition: {
+          duration: 0.35,
+          ease: "easeOut",
+        },
+      };
+
   return (
     <section
       id="work"
@@ -33,32 +138,20 @@ export default function CategoryShowcase() {
         {/* Heading */}
         <div className="mb-10 sm:mb-14">
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: isCompact, amount: 0.2 }}
-            transition={{
-              duration: 0.35,
-              ease: "easeOut",
-            }}
+            {...rowMotion}
             className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-8"
           >
             {/* LEFT — TITLE */}
-            <div className="shrink-0">
+            <motion.div {...titleMotion} className="shrink-0">
               <h2 className="font-serif text-5xl font-medium leading-[0.9] tracking-[-0.04em] text-espresso sm:text-6xl md:text-7xl lg:text-8xl">
                 Explore
                 <span className="block italic text-copper">Our Work.</span>
               </h2>
-            </div>
+            </motion.div>
 
             {/* RIGHT — QUOTE */}
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: isCompact, amount: 0.2 }}
-              transition={{
-                duration: 0.35,
-                ease: "easeOut",
-              }}
+              {...quoteMotion}
               className="relative max-w-sm text-left md:right-[130px] md:max-w-md md:text-center lg:max-w-lg"
             >
               <p className="font-serif text-lg font-medium italic leading-8 tracking-[-0.01em] text-black sm:text-xl sm:leading-9 md:text-2xl md:leading-10">
