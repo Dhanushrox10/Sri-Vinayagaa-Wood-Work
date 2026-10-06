@@ -637,7 +637,7 @@ export default function CategoryPage() {
                     justify-between
                     border-t
                     border-espresso/10
-                    pt-3
+                    pt-4
                     sm:mt-12
                     sm:pt-6
                   "

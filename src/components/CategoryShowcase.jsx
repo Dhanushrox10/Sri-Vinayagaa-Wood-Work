@@ -179,14 +179,14 @@ export default function CategoryShowcase() {
             return (
               <motion.div
                 key={category.slug}
-                initial={{ opacity: 0, y: isCompact ? 12 : 20 }}
+                initial={{ opacity: 0, y: isCompact ? 8 : 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={
                   isCompact
                     ? {
                         once: true,
-                        amount: 0.02,
-                        margin: "0px 0px 120px 0px",
+                        amount: 0,
+                        margin: "0px 0px 400px 0px",
                       }
                     : { once: false, amount: 0.02 }
                 }
@@ -205,7 +205,7 @@ export default function CategoryShowcase() {
                     <img
                       src={image}
                       alt={category.name}
-                      loading={index < 3 ? "eager" : "lazy"}
+                      loading={isCompact || index < 3 ? "eager" : "lazy"}
                       decoding="async"
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.045]"
                     />
