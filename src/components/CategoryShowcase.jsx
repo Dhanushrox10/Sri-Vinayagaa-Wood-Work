@@ -68,7 +68,7 @@ function RevealUp({ delay = 0, children }) {
       style={{
         opacity: shown ? 1 : 0,
         transform: shown ? "translate3d(0, 0, 0)" : "translate3d(0, 40px, 0)",
-        transition: `transform 800ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, opacity 800ms ease-out ${delay}ms`,
+        transition: `transform 750ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, opacity 750ms ease-out ${delay}ms`,
         willChange: "transform, opacity",
       }}
     >
@@ -121,7 +121,7 @@ export default function CategoryShowcase() {
                     ? "translate3d(0, 0, 0)"
                     : "translate3d(-40px, 0, 0)",
                   transition:
-                    "transform 800ms cubic-bezier(0.22, 1, 0.36, 1), opacity 800ms ease-out",
+                    "transform 750ms cubic-bezier(0.22, 1, 0.36, 1), opacity 750ms ease-out",
                   willChange: "transform, opacity",
                 }}
               >
@@ -141,7 +141,7 @@ export default function CategoryShowcase() {
                     ? "translate3d(0, 0, 0)"
                     : "translate3d(40px, 0, 0)",
                   transition:
-                    "transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 60ms, opacity 800ms ease-out 60ms",
+                    "transform 750ms cubic-bezier(0.22, 1, 0.36, 1) 60ms, opacity 750ms ease-out 60ms",
                   willChange: "transform, opacity",
                 }}
               >
