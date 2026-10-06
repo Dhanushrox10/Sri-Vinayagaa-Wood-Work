@@ -24,51 +24,63 @@ export default function CategoryShowcase() {
     };
   }, []);
 
-  /*
-   * Phones/tablets only: quietly load and decode the card photos while the
-   * browser is idle, so nothing has to be decoded at the moment this section
-   * scrolls into view (that was the stutter on the first visit).
-   */
+  /* Phones/tablets: quietly load and decode the six cover photos one by one
+     after the page has settled, so they are ready before you scroll to them */
   useEffect(() => {
     if (!isCompact) {
       return undefined;
     }
 
-    const preload = () => {
-      categories.forEach((category) => {
-        const src =
+    let cancelled = false;
+    let handle;
+
+    const urls = categories
+      .map(
+        (category) =>
           category.cover ||
           category.options?.find(
             (option) => option.cover || option.photos?.length > 0,
           )?.cover ||
-          "";
+          "",
+      )
+      .filter(Boolean);
 
-        if (!src) {
+    const preloadAll = async () => {
+      for (const url of urls) {
+        if (cancelled) {
           return;
         }
 
-        const photo = new Image();
+        const image = new Image();
+        image.src = url;
 
-        photo.src = src;
-
-        if (photo.decode) {
-          photo.decode().catch(() => {});
+        try {
+          await image.decode();
+        } catch {
+          /* ignore: the normal <img> will still load it */
         }
-      });
+
+        /* small pause so scrolling never has to wait for us */
+        await new Promise((resolve) => setTimeout(resolve, 200));
+      }
     };
 
-    if ("requestIdleCallback" in window) {
-      const id = window.requestIdleCallback(preload, { timeout: 3000 });
+    const hasIdle = "requestIdleCallback" in window;
 
-      return () => {
-        window.cancelIdleCallback(id);
-      };
+    if (hasIdle) {
+      handle = window.requestIdleCallback(preloadAll, { timeout: 3000 });
+    } else {
+      handle = window.setTimeout(preloadAll, 2000);
     }
 
-    const timer = window.setTimeout(preload, 1500);
-
     return () => {
-      window.clearTimeout(timer);
+      cancelled = true;
+
+      if (hasIdle) {
+        window.cancelIdleCallback(handle);
+      } else {
+        window.clearTimeout(handle);
+      }
     };
   }, [isCompact]);
 
