@@ -390,47 +390,47 @@ export default function OptionPage() {
             )}
 
             {/* BOTTOM NAVIGATION */}
-            <div
-              className="
-                mt-10
-                flex
-                items-center
-                justify-between
-                border-t
-                border-espresso/10
-                pt-3
-                sm:mt-12
-                sm:pt-6
-              "
-            >
-              <div>
-                <Link
-                  to={`/${category.slug}`}
-                  className="
-                    group
-                    mt-1.5
-                    inline-flex
-                    cursor-pointer
-                    items-center
-                    font-serif
-                    text-[22px]
-                    text-espresso
-                    sm:text-[28px]
-                  "
-                >
-                  <span
-                    className="
-                      transition-transform
-                      duration-300
-                      group-hover:-translate-x-1
-                    "
-                  >
-                    ←
-                  </span>
+<div
+  className="
+    mt-10
+    flex
+    items-center
+    justify-between
+    border-t
+    border-espresso/10
+    pt-3
+    sm:mt-12
+    sm:pt-6
+  "
+>
+  <div>
+    <Link
+      to={`/${category.slug}`}
+      className="
+        group
+        inline-flex
+        cursor-pointer
+        items-center
+        font-serif
+        text-[22px]
+        text-espresso
+        sm:text-[28px]
+        lg:mt-1.5
+      "
+    >
+      <span
+        className="
+          transition-transform
+          duration-300
+          group-hover:-translate-x-1
+        "
+      >
+        ←
+      </span>
 
-                  <span className="ml-2">{category.name}</span>
-                </Link>
-              </div>
+      <span className="ml-2">{category.name}</span>
+    </Link>
+  </div>
 
               <div className="flex items-center gap-3 lg:flex-col lg:items-start">
                 {/* RECENT WORKS (desktop only, mobile uses the burger menu) */}

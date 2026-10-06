@@ -736,7 +736,7 @@ export default function CategoryPage() {
             </section>
           </>
         ) : (
-          <section className="bg-ivory pb-2 pt-6 sm:pb-4 sm:pt-8 lg:pb-6 lg:pt-8">
+          <section className="bg-ivory pb-5 pt-6 sm:pb-5 sm:pt-8 lg:pb-6 lg:pt-8">
             <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
               <nav
                 className="

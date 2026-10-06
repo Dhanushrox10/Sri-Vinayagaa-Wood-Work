@@ -31,7 +31,6 @@ export default function CategoryShowcase() {
     >
       <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
         {/* Heading */}
-        {/* Heading */}
         <div className="mb-10 sm:mb-14">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -45,7 +44,7 @@ export default function CategoryShowcase() {
           >
             {/* LEFT — TITLE */}
             <div className="shrink-0">
-              <h2 className="font-serif text-5xl font-medium leading-[0.92] tracking-[-0.04em] text-espresso sm:text-6xl md:text-7xl lg:text-8xl">
+              <h2 className="font-serif text-5xl font-medium leading-[0.9] tracking-[-0.04em] text-espresso sm:text-6xl md:text-7xl lg:text-8xl">
                 Explore
                 <span className="block italic text-copper">Our Work.</span>
               </h2>
