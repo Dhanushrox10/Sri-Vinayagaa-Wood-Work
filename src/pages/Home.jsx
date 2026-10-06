@@ -98,16 +98,15 @@ export default function Home() {
             {reasons.map((reason, index) => (
               <motion.div
                 key={reason.title}
-                initial={{ opacity: 0, y: isCompact ? 12 : 20 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={
-                  isCompact
-                    ? { once: true, amount: 0.02, margin: "0px 0px 120px 0px" }
-                    : { once: false, amount: 0.2 }
-                }
+                viewport={{
+                  once: false,
+                  amount: isCompact ? 0.15 : 0.2,
+                }}
                 transition={{
-                  duration: isCompact ? 0.3 : 0.6,
-                  delay: isCompact ? (index % 2) * 0.04 : index * 0.08,
+                  duration: isCompact ? 0.4 : 0.6,
+                  delay: isCompact ? (index % 2) * 0.05 : index * 0.08,
                 }}
                 className="
                   group
