@@ -58,9 +58,8 @@ function useReveal(enabled, trigger = 0.2, margin = "0px 0px -60px 0px") {
 }
 
 /* Phones/tablets: a card that fades and rises into place */
-/* Phones/tablets: a card that fades and rises into place */
 function RevealUp({ delay = 0, children }) {
-  const [ref, shown] = useReveal(true, 0.05, "0px 0px 40px 0px");
+const [ref, shown] = useReveal(true, 0.02, "0px 0px 160px 0px");
 
   return (
     <div
@@ -97,8 +96,8 @@ export default function CategoryShowcase() {
     };
   }, []);
 
-  const [titleRef, titleShown] = useReveal(isCompact);
-  const [quoteRef, quoteShown] = useReveal(isCompact);
+const [titleRef, titleShown] = useReveal(isCompact, 0.05, "0px 0px 120px 0px");
+const [quoteRef, quoteShown] = useReveal(isCompact, 0.05, "0px 0px 120px 0px");
 
   return (
     <section
