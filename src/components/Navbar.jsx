@@ -75,7 +75,7 @@ export default function Navbar() {
     };
   }, []);
 
-   /* Which home-page section is in the middle of the screen
+  /* Which home-page section is in the middle of the screen
      (paused while the burger menu is open, and only needed on the home page) */
   useEffect(() => {
     if (mobileOpen || pathname !== "/") {
@@ -154,11 +154,39 @@ export default function Navbar() {
     };
   }, []);
 
+  /* Freeze the page exactly where it is while the burger menu is open,
+     so the page behind it can't scroll or shift */
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    if (!mobileOpen) {
+      return undefined;
+    }
+
+    const scrollY = window.scrollY;
+    const body = document.body;
+    const html = document.documentElement;
+
+    const previous = {
+      position: body.style.position,
+      top: body.style.top,
+      width: body.style.width,
+      overflow: body.style.overflow,
+      htmlOverflow: html.style.overflow,
+    };
+
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.width = "100%";
+    body.style.overflow = "hidden";
+    html.style.overflow = "hidden";
 
     return () => {
-      document.body.style.overflow = "";
+      body.style.position = previous.position;
+      body.style.top = previous.top;
+      body.style.width = previous.width;
+      body.style.overflow = previous.overflow;
+      html.style.overflow = previous.htmlOverflow;
+
+      window.scrollTo(0, scrollY);
     };
   }, [mobileOpen]);
 
@@ -537,6 +565,7 @@ export default function Navbar() {
         {mobileOpen && (
           <motion.div
             data-mobile-menu
+            data-lenis-prevent
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -549,6 +578,7 @@ export default function Navbar() {
               sm:top-[73px]
               z-50
               overflow-y-auto
+              overscroll-contain
               bg-ivory
               px-6
               pb-10
