@@ -159,9 +159,17 @@ export default function Hero() {
   )}`;
 
   return (
+    /*
+     * Height: lvh is a fixed height (it does not change while you scroll),
+     * so the page no longer jumps when the phone's address bar hides.
+     * --hero-extra is the difference between the big and small screen
+     * heights (0 on desktop). It keeps the bottom items (counter, label,
+     * progress bar) sitting at the bottom of the visible screen.
+     */
     <section
       ref={sectionRef}
-      className="relative flex min-h-dvh items-start overflow-hidden bg-espresso text-white lg:items-center"
+      style={{ "--hero-extra": "calc(100lvh - 100svh)" }}
+      className="relative flex min-h-lvh items-start overflow-hidden bg-espresso text-white lg:items-center"
     >
       {/* =====================================
           BACKGROUND
@@ -319,7 +327,7 @@ export default function Hero() {
             >
               View Our Work
               <svg
-                className="h-2.5 w-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1"
+                className="h-3 w-5 shrink-0 transition-transform duration-300 group-hover:translate-x-1"
                 viewBox="0 0 20 12"
                 fill="none"
                 stroke="currentColor"
@@ -388,7 +396,7 @@ export default function Hero() {
           }}
           className="
             absolute
-            bottom-7
+            bottom-[calc(1.75rem_+_var(--hero-extra))]
             right-6
             z-10
             text-right
@@ -415,7 +423,7 @@ export default function Hero() {
           SLIDE COUNTER
       ===================================== */}
 
-      <div className="absolute bottom-8 left-6 z-10 flex items-center gap-4 sm:left-8 lg:left-12">
+      <div className="absolute bottom-[calc(2rem_+_var(--hero-extra))] left-6 z-10 flex items-center gap-4 sm:left-8 lg:left-12">
         <span className="font-serif text-2xl text-white">
           {String(current + 1).padStart(2, "0")}
         </span>
@@ -431,7 +439,7 @@ export default function Hero() {
           PROGRESS BAR
       ===================================== */}
 
-      <div className="absolute bottom-0 left-0 right-0 z-10 h-px bg-white/10">
+      <div className="absolute bottom-[var(--hero-extra)] left-0 right-0 z-10 h-px bg-white/10">
         <motion.div
           key={`${current}-${inView}`}
           initial={{
@@ -465,7 +473,7 @@ export default function Hero() {
         }}
         className="
           absolute
-          bottom-8
+          bottom-[calc(2rem_+_var(--hero-extra))]
           left-1/2
           z-10
           hidden

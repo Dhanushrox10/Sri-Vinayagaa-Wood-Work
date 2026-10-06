@@ -31,17 +31,14 @@ export default function CategoryShowcase() {
     >
       <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
         {/* Heading */}
+        {/* Heading */}
         <div className="mb-10 sm:mb-14">
           <motion.div
-            initial={{
-              opacity: 0,
-              x: isCompact ? 0 : -50,
-              y: isCompact ? 14 : 0,
-            }}
-            whileInView={{ opacity: 1, x: 0, y: 0 }}
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: isCompact, amount: 0.2 }}
             transition={{
-              duration: isCompact ? 0.4 : 0.35,
+              duration: 0.35,
               ease: "easeOut",
             }}
             className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-8"
@@ -56,7 +53,7 @@ export default function CategoryShowcase() {
 
             {/* RIGHT — QUOTE */}
             <motion.div
-              initial={isCompact ? false : { opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: isCompact, amount: 0.2 }}
               transition={{
