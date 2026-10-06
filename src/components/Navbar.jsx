@@ -557,12 +557,6 @@ export default function Navbar() {
             "
           >
             <div className="mx-auto max-w-xl">
-              <div className="mb-0.5 border-b border-espresso/10 pb-5">
-                <p className="font-sans text-[28px] font-semibold tracking-[-0.035em] text-espresso">
-                  Explore our spaces.
-                </p>
-              </div>
-
               <ul>
                 <li>
                   <Link
