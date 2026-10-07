@@ -170,7 +170,7 @@ export default function OptionPage() {
 
   return (
     <>
-      <main className="page-fade min-h-screen bg-ivory">
+      <main className="page-fade flex min-h-screen flex-col bg-ivory">
         {/* OPTION HEADER */}
         <section
           className="
@@ -240,16 +240,19 @@ export default function OptionPage() {
         {/* GALLERY */}
         <section
           className="
-          bg-ivory
-          px-6
-          pb-4
-          sm:px-8
-          sm:pb-6
-          lg:px-12
-          lg:pb-8
+            flex
+            flex-1
+            flex-col
+            bg-ivory
+            px-6
+            pb-4
+            sm:px-8
+            sm:pb-6
+            lg:px-12
+            lg:pb-8
           "
         >
-          <div className="mx-auto max-w-7xl">
+          <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col">
             {option.photos?.length > 0 ? (
               <div
                 className="
@@ -389,108 +392,111 @@ export default function OptionPage() {
               </div>
             )}
 
-            {/* BOTTOM NAVIGATION */}
-            <div
-              className="
-    mt-10
-    flex
-    items-center
-    justify-between
-    border-t
-    border-espresso/10
-    pt-3
-    sm:mt-12
-    sm:pt-6
-  "
-            >
-              <div>
-                <Link
-                  to={`/${category.slug}`}
-                  className="
-        group
-        inline-flex
-        cursor-pointer
-        items-center
-        font-serif
-        text-[22px]
-        text-espresso
-        sm:text-[28px]
-        lg:mt-1.5
-      "
-                >
-                  <span
+            {/* Pushes the bottom buttons down to the bottom of the page */}
+            <div className="mt-auto">
+              {/* BOTTOM NAVIGATION */}
+              <div
+                className="
+                  mt-10
+                  flex
+                  items-center
+                  justify-between
+                  border-t
+                  border-espresso/10
+                  pt-3
+                  sm:mt-12
+                  sm:pt-6
+                "
+              >
+                <div>
+                  <Link
+                    to={`/${category.slug}`}
                     className="
-          transition-transform
-          duration-300
-          group-hover:-translate-x-1
-        "
-                  >
-                    ←
-                  </span>
-
-                  <span className="ml-2">{category.name}</span>
-                </Link>
-              </div>
-
-              <div className="flex items-center gap-3 lg:flex-col lg:items-start">
-                {/* RECENT WORKS (desktop only, mobile uses the burger menu) */}
-                <a
-                  href={recentWorksUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="
-                    group
-                    hidden
-                    cursor-pointer
-                    items-center
-                    gap-2
-                    font-serif
-                    text-[22px]
-                    font-medium
-                    !text-copper
-                    sm:text-[28px]
-                    lg:inline-flex
-                  "
-                >
-                  <span>Recent Works</span>
-
-                  <span
-                    className="
-                      transition-transform
-                      duration-300
-                      group-hover:translate-x-1
+                      group
+                      inline-flex
+                      cursor-pointer
+                      items-center
+                      font-serif
+                      text-[22px]
+                      text-espresso
+                      sm:text-[28px]
+                      lg:mt-1.5
                     "
                   >
-                    →
-                  </span>
-                </a>
+                    <span
+                      className="
+                        transition-transform
+                        duration-300
+                        group-hover:-translate-x-1
+                      "
+                    >
+                      ←
+                    </span>
 
-                <a
-                  href="/#contact"
-                  className="
-                    group
-                    inline-flex
-                    cursor-pointer
-                    items-center
-                    gap-2
-                    font-serif
-                    text-[22px]
-                    text-espresso
-                    sm:text-[28px]
-                  "
-                >
-                  <span>Enquire</span>
+                    <span className="ml-2">{category.name}</span>
+                  </Link>
+                </div>
 
-                  <span
+                <div className="flex items-center gap-3 lg:flex-col lg:items-start">
+                  {/* RECENT WORKS (desktop only, mobile uses the burger menu) */}
+                  <a
+                    href={recentWorksUrl}
+                    target="_blank"
+                    rel="noreferrer"
                     className="
-                      transition-transform
-                      duration-300
-                      group-hover:translate-x-1
+                      group
+                      hidden
+                      cursor-pointer
+                      items-center
+                      gap-2
+                      font-serif
+                      text-[22px]
+                      font-medium
+                      !text-copper
+                      sm:text-[28px]
+                      lg:inline-flex
                     "
                   >
-                    →
-                  </span>
-                </a>
+                    <span>Recent Works</span>
+
+                    <span
+                      className="
+                        transition-transform
+                        duration-300
+                        group-hover:translate-x-1
+                      "
+                    >
+                      →
+                    </span>
+                  </a>
+
+                  <a
+                    href="/#contact"
+                    className="
+                      group
+                      inline-flex
+                      cursor-pointer
+                      items-center
+                      gap-2
+                      font-serif
+                      text-[22px]
+                      text-espresso
+                      sm:text-[28px]
+                    "
+                  >
+                    <span>Enquire</span>
+
+                    <span
+                      className="
+                        transition-transform
+                        duration-300
+                        group-hover:translate-x-1
+                      "
+                    >
+                      →
+                    </span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>

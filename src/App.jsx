@@ -24,12 +24,12 @@ const SCROLL_TARGETS = {
   "/#contact": { selector: "#contact", offset: 0 },
   "/#about": { selector: "#about", offset: 0, center: true },
   "/#collections": { selector: "#collections", offset: -80 },
-  "#work": { selector: "#work", offset: -70 },
+  "#work": { selector: "#work", offset: 0, alignTop: true },
 };
 
-/* Exact scroll position for targets that use center */
+/* Exact scroll position for targets that use center or alignTop */
 const getExactY = (target) => {
-  if (!target.center) {
+  if (!target.center && !target.alignTop) {
     return null;
   }
 
@@ -47,7 +47,10 @@ const getExactY = (target) => {
 
   let y;
 
-  if (rect.height >= visibleHeight) {
+  if (target.alignTop) {
+    /* Section top lines up exactly under the navbar */
+    y = sectionTop - navHeight;
+  } else if (rect.height >= visibleHeight) {
     /* Too tall to fit: start a bit below the section top */
     y = sectionTop - navHeight + TALL_OFFSET;
   } else {
@@ -204,6 +207,19 @@ export default function App() {
     };
   }, []);
 
+  /* If the burger menu is open, wait a moment so it can release its page
+   lock first, then scroll */
+  const afterMenu = (run) => {
+    if (document.querySelector("[data-mobile-menu]")) {
+      window.setTimeout(() => {
+        lenisRef.current?.resize();
+        run();
+      }, 80);
+    } else {
+      run();
+    }
+  };
+
   /* Handle home + contact + about + all collections + work navigation */
   useEffect(() => {
     const handleSectionClick = (event) => {
@@ -230,16 +246,18 @@ export default function App() {
 
         stopSettling();
 
-        if (lenisRef.current) {
-          lenisRef.current.scrollTo(0, {
-            duration: 1,
-          });
-        } else {
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-          });
-        }
+        afterMenu(() => {
+          if (lenisRef.current) {
+            lenisRef.current.scrollTo(0, {
+              duration: 1,
+            });
+          } else {
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          }
+        });
 
         window.history.replaceState(null, "", "/");
 
@@ -258,7 +276,7 @@ export default function App() {
       event.stopImmediatePropagation();
 
       if (location.pathname === "/") {
-        scrollToTarget(lenisRef.current, target);
+        afterMenu(() => scrollToTarget(lenisRef.current, target));
         return;
       }
 
