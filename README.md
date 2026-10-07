@@ -1,16 +1,66 @@
-# React + Vite
+# Sri Vinayagaa Wood Work
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive website for **Sri Vinayagaa Wood Work**, a custom interior and woodwork business in Kottivakkam, Chennai, serving customers since 1997.
 
-Currently, two official plugins are available:
+**Live site:** https://srivinayagaawoodwork.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- Full-screen hero slideshow with featured work labels
+- Collections for Living Room, Kitchen, Bedroom, Pooja Room, Vanity & Mirror and Workspace
+- Category pages with option galleries (TV Unit, Wardrobe, Modular Kitchen and more)
+- Full-screen photo viewer with keyboard and swipe navigation
+- Smooth scrolling and scroll-triggered animations
+- Burger menu for phones and tablets that highlights the current page or section
+- Contact through WhatsApp, call, email and Google Maps
+- Fully responsive layout for mobile, tablet and desktop
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+- React with Vite
+- React Router
+- Tailwind CSS v4
+- Motion (animations)
+- Lenis (smooth scrolling)
+- Hosted on Vercel
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Getting Started
+
+```bash
+git clone https://github.com/Dhanushrox10/Sri-Vinayagaa-Wood-Work.git
+cd Sri-Vinayagaa-Wood-Work
+npm install
+npm run dev
+```
+
+Build for production:
+
+```bash
+npm run build
+npm run preview
+```
+
+## Project Structure
+
+```
+public/          Images, logo and favicon files
+src/
+  components/    Navbar, Hero, CategoryShowcase, Footer, PhotoViewer
+  pages/         Home, CategoryPage, OptionPage
+  data/          content.js (categories and photos), links.js
+  App.jsx        Routes and scroll handling
+  index.css      Theme colors and fonts
+vercel.json      Rewrites for React Router
+```
+
+## Editing Content
+
+- Business details and gallery photos live in `src/data/content.js`.
+- The recent works link is in `src/data/links.js`.
+
+## Contact
+
+**Saravanan S.**, Founder & Owner
+Phone: +91 98402 74500
+Email: srivinayagaawoodwork@gmail.com
+Address: No. 5/489, Venkatesa Puram, Kottivakkam, Chennai - 600041
