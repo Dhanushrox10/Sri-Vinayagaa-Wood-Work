@@ -235,8 +235,16 @@ export default function App() {
 
       /* Home button / logo */
       if (href === "/") {
-        /* On other pages, let the router open the home page normally */
+        /* On other pages, go to the home page ourselves */
         if (location.pathname !== "/") {
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+
+          stopSettling();
+          sessionStorage.removeItem("scrollTarget");
+          navigate("/");
+
           return;
         }
 
