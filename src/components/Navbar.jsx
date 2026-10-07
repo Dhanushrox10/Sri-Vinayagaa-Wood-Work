@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { categories, site } from "../data/content";
@@ -46,6 +46,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileCat, setMobileCat] = useState(null);
   const [activeSection, setActiveSection] = useState("home");
+  const burgerPushed = useRef(false);
 
   const { pathname } = useLocation();
 
@@ -187,6 +188,37 @@ export default function Navbar() {
       html.style.overflow = previous.htmlOverflow;
 
       window.scrollTo(0, scrollY);
+    };
+  }, [mobileOpen]);
+
+  /* Back button closes the burger menu instead of leaving the site */
+  useEffect(() => {
+    if (!mobileOpen) {
+      return undefined;
+    }
+
+    window.history.pushState({ ...window.history.state, burger: true }, "");
+    burgerPushed.current = true;
+
+    const handlePop = () => {
+      burgerPushed.current = false;
+      setMobileOpen(false);
+      setMobileCat(null);
+    };
+
+    window.addEventListener("popstate", handlePop);
+
+    return () => {
+      window.removeEventListener("popstate", handlePop);
+
+      /* Closed with the X button: remove the extra history entry */
+      if (burgerPushed.current) {
+        burgerPushed.current = false;
+
+        if (window.history.state?.burger) {
+          window.history.back();
+        }
+      }
     };
   }, [mobileOpen]);
 
