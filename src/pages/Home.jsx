@@ -19,8 +19,8 @@ const reasons = [
     text: "From accurate measurements to installation and finishing, every stage is handled with attention to detail and precision.",
   },
   {
-    title: "Reliable Support",
-    text: "If an issue arises with our workmanship, we take responsibility and work to resolve it at no additional cost.",
+    title: "Experience You Can Trust",
+    text: "With years of hands-on experience, we bring practical knowledge, proven techniques and confidence to every project.",
   },
 ];
 
