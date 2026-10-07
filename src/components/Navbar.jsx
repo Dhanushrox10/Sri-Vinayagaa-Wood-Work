@@ -579,6 +579,8 @@ export default function Navbar() {
               z-50
               overflow-y-auto
               overscroll-contain
+              [scrollbar-width:none]
+              [&::-webkit-scrollbar]:hidden
               bg-ivory
               px-6
               pb-10
