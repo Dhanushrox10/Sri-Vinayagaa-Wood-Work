@@ -61,6 +61,7 @@ vercel.json      Rewrites for React Router
 ## Contact
 
 **Saravanan S.**, Founder & Owner
-Phone: +91 98402 74500
-Email: srivinayagaawoodwork@gmail.com
-Address: No. 5/489, Venkatesa Puram, Kottivakkam, Chennai - 600041
+
+- Phone: +91 98402 74500
+- Email: srivinayagaawoodwork@gmail.com
+- Address: No. 5/489, Venkatesa Puram, Kottivakkam, Chennai - 600041
