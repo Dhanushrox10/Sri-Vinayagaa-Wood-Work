@@ -200,6 +200,8 @@ export default function Navbar() {
     window.history.pushState({ ...window.history.state, burger: true }, "");
     burgerPushed.current = true;
 
+    const startPath = window.location.pathname;
+
     const handlePop = () => {
       burgerPushed.current = false;
       setMobileOpen(false);
@@ -211,13 +213,19 @@ export default function Navbar() {
     return () => {
       window.removeEventListener("popstate", handlePop);
 
-      /* Closed with the X button: remove the extra history entry */
       if (burgerPushed.current) {
         burgerPushed.current = false;
 
-        if (window.history.state?.burger) {
-          window.history.back();
-        }
+        /* Wait a moment: if a link was tapped, the page changes first,
+         and we must not go back over it */
+        window.setTimeout(() => {
+          if (
+            window.location.pathname === startPath &&
+            window.history.state?.burger
+          ) {
+            window.history.back();
+          }
+        }, 120);
       }
     };
   }, [mobileOpen]);
