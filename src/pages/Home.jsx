@@ -118,11 +118,12 @@ export default function Home() {
                   border-espresso/10
                   bg-[#F5F0E8]
                   p-5
-                  px-5
+                  px-3
                   text-left
                   max-lg:mx-auto
-                  max-lg:w-[87%]
+                  max-lg:w-[92%]
                   sm:p-6
+                  sm:px-4
                   lg:min-h-[175px]
                   lg:rounded-none
                   lg:border-y-0
