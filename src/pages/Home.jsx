@@ -164,7 +164,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false, amount: 0.3 }}
+              viewport={{ once: false, amount: 0.05 }}
               transition={{ duration: 0.8 }}
             >
               <h2 className="font-serif text-5xl font-medium leading-[0.9] tracking-[-0.04em] text-white sm:text-6xl md:text-7xl lg:text-8xl">
@@ -185,10 +185,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{
-                once: false,
-                amount: window.innerWidth >= 1024 ? 0.25 : 0.1,
-              }}
+              viewport={{ once: false, amount: 0.05 }}
               transition={{
                 duration: 0.8,
                 delay: 0.1,
