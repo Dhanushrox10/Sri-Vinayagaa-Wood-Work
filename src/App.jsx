@@ -24,6 +24,7 @@ const SCROLL_TARGETS = {
   "/#contact": { selector: "#contact", offset: 0 },
   "/#about": { selector: "#about", offset: 0, center: true },
   "/#collections": { selector: "#collections", offset: -80 },
+  "#work": { selector: "#work", offset: -70 },
 };
 
 /* Exact scroll position for targets that use center */
@@ -203,11 +204,11 @@ export default function App() {
     };
   }, []);
 
-  /* Handle home + contact + about + all collections navigation */
+  /* Handle home + contact + about + all collections + work navigation */
   useEffect(() => {
     const handleSectionClick = (event) => {
       const link = event.target.closest(
-        'a[href="/#contact"], a[href="/#about"], a[href="/#collections"], a[href="/"]',
+        'a[href="/#contact"], a[href="/#about"], a[href="/#collections"], a[href="#work"], a[href="/"]',
       );
 
       if (!link) {
