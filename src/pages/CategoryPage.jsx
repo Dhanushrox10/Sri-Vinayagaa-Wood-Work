@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getCategory } from "../data/content";
 import { recentWorksUrl } from "../data/links";
 import PhotoViewer from "../components/PhotoViewer";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const categoryQuotes = {
   "living-room": "A space made for living, gathering and coming home to.",
@@ -27,8 +28,14 @@ const categoryQuotes = {
 
 export default function CategoryPage() {
   const { categorySlug } = useParams();
-
   const category = getCategory(categorySlug);
+
+    usePageTitle(
+    category ? `${category.name} Designs` : undefined,
+    category
+      ? `${category.name} designs by Sri Vinayagaa Wood Work, Chennai. Custom interiors and woodwork crafted since 1997.`
+      : undefined,
+  );
 
   const [currentPhoto, setCurrentPhoto] = useState(0);
   const [selectedPhoto, setSelectedPhoto] = useState(null);

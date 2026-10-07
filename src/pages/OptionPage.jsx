@@ -4,12 +4,20 @@ import { useEffect, useState } from "react";
 import { getCategory, getOption } from "../data/content";
 import { recentWorksUrl } from "../data/links";
 import PhotoViewer from "../components/PhotoViewer";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function OptionPage() {
   const { categorySlug, optionSlug } = useParams();
 
   const category = getCategory(categorySlug);
   const option = getOption(categorySlug, optionSlug);
+
+  usePageTitle(
+    option && category ? `${option.name} – ${category.name}` : undefined,
+    option && category
+      ? `${option.name} designs for your ${category.name.toLowerCase()} by Sri Vinayagaa Wood Work, Chennai. See our work and enquire.`
+      : undefined,
+  );
 
   const [selectedPhoto, setSelectedPhoto] = useState(null);
 

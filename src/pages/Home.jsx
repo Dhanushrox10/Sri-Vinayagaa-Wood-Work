@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import Hero from "../components/Hero";
 import CategoryShowcase from "../components/CategoryShowcase";
 import { site } from "../data/content";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const reasons = [
   {
@@ -26,6 +27,7 @@ const reasons = [
 
 export default function Home() {
   const mapsUrl = "https://maps.app.goo.gl/WZYRXHKkiQq5tVTj7";
+    usePageTitle();
 
   /* True on phones and tablets (below 1024px): quicker reveals */
   const [isCompact, setIsCompact] = useState(
